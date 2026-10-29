@@ -4,6 +4,27 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: 'Browser to run tests'
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - safari
+      environment:
+        description: 'environment to run tests'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - prod
+
 jobs:
   test:
     runs-on: ubuntu-latest
