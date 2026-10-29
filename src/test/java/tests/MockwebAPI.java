@@ -28,7 +28,8 @@ public class MockwebAPI {
         //Browser browser= playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
         //Page page =browser.newPage();
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
+        browser = playwright.chromium().launch();
+        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
         page = browser.newPage();
         page.setDefaultTimeout(8000);
         page.navigate("https://eventhub.rahulshettyacademy.com/login");

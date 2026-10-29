@@ -37,8 +37,9 @@ public class testBase {
             browser = playwright.webkit().launch();
         }
          else {
-            browser= playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
-            }
+            //browser= playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
+            browser = playwright.chromium().launch();
+         }
 
 
         //playwright = Playwright.create();

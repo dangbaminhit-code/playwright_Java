@@ -17,7 +17,8 @@ public class UIValidationCon {
     @BeforeMethod
     public void setUp() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
+        browser = playwright.chromium().launch();
+        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
         page =browser.newPage();
         page.navigate("https://rahulshettyacademy.com/AutomationPractice/");
     }

@@ -21,7 +21,8 @@ public class moreUIValidation {
     @BeforeMethod
     public void setUp(){
        playwright = Playwright.create()  ;
-       browser= playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
+        browser = playwright.chromium().launch();
+       //browser= playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
        //chrome browser incognito browser
        context = browser.newContext();
        context.tracing().start(new Tracing.StartOptions().setScreenshots(true)
