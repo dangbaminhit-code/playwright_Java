@@ -1,0 +1,62 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 283,
+      "title": "World Tech Summit",
+      "description": "A premier technology conference bringing together 500+ industry leaders, startup founders, and engineers for two days of keynotes, workshops, and networking. Topics include AI/ML, cloud infrastructure, DevSecOps, and the future of the Indian tech ecosystem.",
+      "category": "Conference",
+      "venue": "Hyderabad, Hitech city",
+      "city": "Hyderabad",
+      "eventDate": "2026-04-18T09:00:00.000Z",
+      "price": "1500",
+      "totalSeats": 500,
+      "availableSeats": 8,
+      "imageUrl": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+      "isStatic": true,
+      "userId": null,
+      "createdAt": "2026-09-14T02:39:14.852Z",
+      "updatedAt": "2026-10-15T09:57:28.825Z"
+    },
+    {
+      "id": 22367,
+      "title": "API test",
+      "description": "hello",
+      "category": "Conference",
+      "venue": "ffgd",
+      "city": "vbn",
+      "eventDate": "2026-12-20T03:28:00.000Z",
+      "price": "10",
+      "totalSeats": 100,
+      "availableSeats": 100,
+      "imageUrl": null,
+      "isStatic": false,
+      "userId": 11442,
+      "createdAt": "2026-10-20T03:28:21.714Z",
+      "updatedAt": "2026-10-20T03:28:21.714Z"
+    },
+    {
+      "id": 21755,
+      "title": "Playwright API Event 11",
+      "description": "Playwright API Event",
+      "category": "Concert",
+      "venue": "HCM",
+      "city": "SG",
+      "eventDate": "2026-11-07T03:09:00.000Z",
+      "price": "10",
+      "totalSeats": 100,
+      "availableSeats": 100,
+      "imageUrl": null,
+      "isStatic": false,
+      "userId": 11442,
+      "createdAt": "2026-10-19T07:57:54.489Z",
+      "updatedAt": "2026-10-19T08:00:36.407Z"
+    }
+  ],
+  "pagination": {
+    "total": 6,
+    "page": 1,
+    "limit": 12,
+    "totalPages": 1
+  }
+}
