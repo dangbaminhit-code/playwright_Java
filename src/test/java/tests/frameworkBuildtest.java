@@ -3,6 +3,7 @@ package tests;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.AriaRole;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.*;
 
@@ -57,6 +58,20 @@ public class frameworkBuildtest extends testBase {
         eventPage.verifySeatAfter("POM",seatsBefore);
 
 
+        // mybooking page
+        myBookings myBooking  = new myBookings(page);
+        myBooking.goToMyBookings(); // vào trang my booking
+        myBooking.waitBookings();// chờ cho các booking hiện lên
+        myBooking.viewBookingDetails(Bookingref); // bấm view details ở booking ref
+        myBooking.backToMyBookings();//trở lai trang my booking
+        int countBefore = myBooking.cancelBooking(Bookingref);
+        myBooking.verifyAfterDeletedBooking(Bookingref,countBefore);
+
+
+
+
+
+
       //assertThat(targetCard).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(10000));
       //String seatCard = targetCard.getByText("seats").innerText();
         //int seatsBefore = Integer.parseInt(seatCard.replaceAll("\\D+", "")); // lấy số: 500
@@ -92,4 +107,85 @@ public class frameworkBuildtest extends testBase {
 
         //System.out.println("Số chỗ sau khi book: " + targetCardAfter.getByText("seats").innerText());
     }
+    // Xóa booking có sẵn
+    @DataProvider(name="Bookingref")
+    public Object[][] Bookingref(){
+        return new Object[][]{
+                {"K-RY1KOM"},{"D-3UXNOS"}};
+        }
+    @Test(dataProvider = "Bookingref")
+      public void cancelBooking(String Bookingref){
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+
+        myBookings bookings = new myBookings(page);
+        bookings.goToMyBookings();
+
+        int countBefore = bookings.cancelBooking(Bookingref);
+        bookings.verifyAfterDeletedBooking(Bookingref, countBefore);
+    }
+
+
+    // search function
+    @DataProvider(name = "categories")
+    public Object[][] categories() {
+        return new Object[][] { {"Sports"}, {"Concert"}, {"Festival"},
+                {"Conference"},{"Workshop"}};
+    }
+
+    @Test(dataProvider = "categories", description = "Lọc theo từng category")
+    public void filterByCategory(String category) {
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+
+        EventPage eventPage = new EventPage(page);
+        eventPage.goTo();
+        eventPage.waitEvent();
+        eventPage.filterByCategory(category);
+        //eventPage.verifySelectedCategory(category);
+        //eventPage.verifyAllResultsCategory(category);
+        page.waitForTimeout(2000);
+        eventPage.verifyResultsMatchOrEmpty(category);
+    }
+
+    @Test(description = "Search keyword không tồn tại thì không có kết quả")
+    public void searchNoResult() {
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+
+        EventPage eventPage = new EventPage(page);
+        eventPage.search("xyz_khong_ton_tai_123", null, null)
+                .verifyNoResults();
+    }
+    @DataProvider(name = "cities")
+    public Object[][] cities() {
+        return new Object[][] { {"Mumbai"}, {"Bangalore"}, {"Delhi"},
+                {"Hyderabad"},{"Chennai"},{"Pune"}};
+    }
+    @Test(dataProvider = "cities", description = "Lọc theo từng city")
+    public void filterByCity(String city) {
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+
+        EventPage eventPage = new EventPage(page);
+        eventPage.goTo();
+        eventPage.waitEvent();
+        eventPage.filterByCity(city);
+        //eventPage.verifySelectedCategory(category);
+        //eventPage.verifyAllResultsCategory(city);
+        page.waitForTimeout(2000);
+        eventPage.verifyResultsMatchOrEmpty(city);
+    }
+   @Test
+   public void searchByKey() {
+       new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+
+       EventPage eventPage = new EventPage(page);
+       eventPage.goTo();
+       int totalBefore = eventPage.waitEvent().count();
+       eventPage.searchByKeyword("api");
+       page.waitForTimeout(2000);
+       //eventPage.verifyAllResultsKeyword("api");
+       eventPage.verifyResultsMatchOrEmpty("api");
+       eventPage.clearSearch();
+       eventPage.verifyResultsRestored(totalBefore);
+
+   }
+
 }
