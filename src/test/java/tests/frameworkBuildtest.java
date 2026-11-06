@@ -241,5 +241,23 @@ public class frameworkBuildtest extends testBase {
        eventPage.verifyResultsRestored(totalBefore);
 
    }
+   @DataProvider(name="status")
+    public Object[][] status(){
+        return new Object[][]{
+                {"Confirmed"},{"Cancelled"},{"All Statuses"}
+        };
 
+   }
+   @Test(dataProvider = "status", description = "filter by status")
+    public void filterByStatus(String status){
+       new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+       AdminBookingPage admin = new AdminBookingPage(page);
+       admin.goToAdminBookings();
+       admin.adminWaitBookings();
+       admin.filterByStatus(status);
+       admin.verifyFilterByStatus(status);
+
+   }
 }
+
+
