@@ -9,7 +9,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 public class myBookings
 {
     Page page;
-    private final Locator bookingCard;
+    public final Locator bookingCard;
 
     public myBookings(Page page){
         this.page= page;
@@ -69,7 +69,18 @@ public class myBookings
         System.out.println("Đã huỷ booking " + Bookingref
                 + ". Còn lại: " + bookingCard.count() + " booking");
         }
+    public void clearAllBookings(){
+        waitBookings();
+        page.onceDialog(dialog -> dialog.accept());
+        page.getByRole(AriaRole.BUTTON,new
+                Page.GetByRoleOptions().setName("Clear all bookings")).click();
 
+
+    }
+    public void verifyAfterClearAllBookings(){
+        assertThat(bookingCard).hasCount(0);
+        System.out.println("Đã xoá hết booking. Còn lại: " + bookingCard.count());
+    }
     }
 
 

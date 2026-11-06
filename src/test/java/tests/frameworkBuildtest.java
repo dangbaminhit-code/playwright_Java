@@ -3,6 +3,7 @@ package tests;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.assertions.LocatorAssertions;
 import com.microsoft.playwright.options.AriaRole;
+import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.*;
@@ -59,13 +60,26 @@ public class frameworkBuildtest extends testBase {
 
 
         // mybooking page
-        myBookings myBooking  = new myBookings(page);
-        myBooking.goToMyBookings(); // vào trang my booking
-        myBooking.waitBookings();// chờ cho các booking hiện lên
-        myBooking.viewBookingDetails(Bookingref); // bấm view details ở booking ref
-        myBooking.backToMyBookings();//trở lai trang my booking
-        int countBefore = myBooking.cancelBooking(Bookingref);
-        myBooking.verifyAfterDeletedBooking(Bookingref,countBefore);
+        //myBookings myBooking  = new myBookings(page);
+        //myBooking.goToMyBookings(); // vào trang my booking
+        //myBooking.waitBookings();// chờ cho các booking hiện lên
+        //myBooking.viewBookingDetails(Bookingref); // bấm view details ở booking ref
+        //myBooking.backToMyBookings();//trở lai trang my booking
+        //int countBefore = myBooking.cancelBooking(Bookingref);
+        //myBooking.verifyAfterDeletedBooking(Bookingref,countBefore);//verify sau khi delete
+        //myBooking.clearAllBookings();
+        //myBooking.verifyAfterClearAllBookings();
+
+        // trang admin booking
+        AdminBookingPage myAdminBooking = new AdminBookingPage(page);
+        myAdminBooking.goToAdminBookings();
+        myAdminBooking.adminWaitBookings();
+        myAdminBooking.filterByStatus("All Statuses");
+        myAdminBooking.verifyFilterByStatus("All Statuses");
+        myAdminBooking.adminFindBookingCard(Bookingref);
+        int countBeforeAdmin = myAdminBooking.adminDeleteBooking(Bookingref);
+        myAdminBooking.adminVerifyAfterDeleteBooking(Bookingref,countBeforeAdmin);
+
 
 
 
@@ -122,8 +136,48 @@ public class frameworkBuildtest extends testBase {
 
         int countBefore = bookings.cancelBooking(Bookingref);
         bookings.verifyAfterDeletedBooking(Bookingref, countBefore);
+
+
     }
 
+    // xóa toàn bộ booking
+    @Test(description = "clear all bookings")
+    public void clearAllBookings(){
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+        myBookings bookings = new myBookings(page);
+        bookings.goToMyBookings();
+        assertThat(bookings.bookingCard.first().
+                or(page.getByText("No bookings yet"))).isVisible();
+        int num = bookings.bookingCard.count();
+        if (num==0){
+            throw new SkipException("There is no Booking to Delete");
+        }
+        bookings.clearAllBookings();
+        bookings.verifyAfterClearAllBookings();
+    }
+    //clear booking in admin booking page
+    @DataProvider(name="adminBooking")
+    public Object[][] adminBooking(){
+        return new Object[][]{
+                {"D-9HLYOV"},{"D-ENXZHP"}
+        };
+    }
+    @Test(dataProvider = "adminBooking",description = "delete booking in my admin booking")
+    public void adminDeleteBooking(String adminBooking){
+        new LoginPage(page, baseUrl).logintoPage().waiteventLoad();
+        AdminBookingPage adminBookingPage = new AdminBookingPage(page);
+        adminBookingPage.goToAdminBookings();
+        assertThat(adminBookingPage.bookingRows.first().
+                or(page.getByText("No bookings found"))).isVisible();
+        int num = adminBookingPage.bookingRows.count();
+        if (num==0){
+            throw new SkipException("There is no Booking to Delete");
+        }
+        int countBeforeAdmin = adminBookingPage.adminDeleteBooking(adminBooking);
+        adminBookingPage.adminVerifyAfterDeleteBooking(adminBooking,countBeforeAdmin);
+
+
+    }
 
     // search function
     @DataProvider(name = "categories")
