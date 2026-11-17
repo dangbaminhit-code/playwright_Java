@@ -77,8 +77,35 @@ public class frameworkBuildtest extends testBase {
         myAdminBooking.filterByStatus("All Statuses");
         myAdminBooking.verifyFilterByStatus("All Statuses");
         myAdminBooking.adminFindBookingCard(Bookingref);
+        myAdminBooking.adminViewBookingDetails(Bookingref);
+        myAdminBooking.closeBookingDetails();
         int countBeforeAdmin = myAdminBooking.adminDeleteBooking(Bookingref);
         myAdminBooking.adminVerifyAfterDeleteBooking(Bookingref,countBeforeAdmin);
+
+        // go to event admin and select delete event
+        adminEventPage.goToAdminEventPage();
+        adminEventPage.waitAdminEvent();
+        adminEventPage.findAdminEvent("POM");
+        int adminCountBefore= adminEventPage.adminDeleteEvent("POM");
+        adminEventPage.adminVerifyAfterDeleteEvent("POM",adminCountBefore);
+
+        // go to event admin and select edit, select update event
+        adminEventPage.goToAdminEventPage();
+        adminEventPage.waitAdminEvent();
+        adminEventPage.findAdminEvent("kutaaa");
+        adminEventPage.adminEditEventUpdate("kutaaa","kuta1",
+                "hello there is new description","Workshop",
+                "Mumbai","Q2","2026-12-18T03:51",
+                "55","550");
+
+        // go to event admin and select edit, select cancle edit event
+        adminEventPage.goToAdminEventPage();
+        adminEventPage.waitAdminEvent();
+        adminEventPage.findAdminEvent("kuta1");
+        adminEventPage.adminEditCancleUpdate("kuta1");
+
+
+
 
 
 

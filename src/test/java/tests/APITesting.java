@@ -39,7 +39,7 @@ public class APITesting {
         String eventCategory = "Concert";
         String eventVenue = "HCM";
         String eventCity= "SG";
-        String eventDate= "2026-11-07T03:09:00.000Z";
+        String eventDate= "2026-12-07T03:09:00.000Z";
         String eventPrice= "10";
         String eventSeat = "100";
 
@@ -51,6 +51,22 @@ public class APITesting {
         eventData.put("eventDate", eventDate);
         eventData.put("price", eventPrice);
         eventData.put("totalSeats", eventSeat);
+
+        HashMap<Object,Object> bookingData = new HashMap<>();
+        int eventId = 285;
+        String customerName = "Minh Dang";
+        String customerEmail = "abc@bca.com";
+        String customerPhone = "0938051444";
+        int quantity = 2;
+
+        bookingData.put("eventId", eventId);
+        bookingData.put("customerName", customerName);
+        bookingData.put("customerEmail", customerEmail);
+        bookingData.put("customerPhone", customerPhone);
+        bookingData.put("quantity", quantity);
+
+
+
 
         APIResponse eventResponse = apiRequest.post
                 ("https://api.eventhub.rahulshettyacademy.com/api/events",
@@ -96,5 +112,79 @@ public class APITesting {
                         "Your deleted event is not display in the list.");
                 System.out.println("Deleted event is not belong to the list anymore");
 
+                // book event
+
+        APIResponse eventBooking = apiRequest.post
+                ("https://api.eventhub.rahulshettyacademy.com/api/bookings",
+                        RequestOptions.create().setHeader("Authorization"
+                                , "Bearer " + token).setData(bookingData));
+        Assert.assertTrue(eventBooking.ok(),"Booking confirmed!");
+        System.out.println(eventBooking.text());
+        int bookingId = JsonPath.read(eventBooking.text(), "$.data.id");
+        String bookingRef= JsonPath.read(eventBooking.text(),
+                "$.data.bookingRef");
+        System.out.println("Booking id: " + bookingId + " | ref: " + bookingRef);
+
+        // go to my booking page
+        APIResponse myBooking = apiRequest.get
+                ("https://api.eventhub.rahulshettyacademy.com/api/bookings",
+                        RequestOptions.create().setHeader("Authorization"
+                                , "Bearer " + token));
+        System.out.println("Status: " + myBooking.status());
+        System.out.println(myBooking.text());
+        Assert.assertTrue(myBooking.ok(), "Get my bookings failed: " + myBooking.text());
+
+        List<String> allBookingRefs = JsonPath.read(myBooking.text(), "$.data[*].bookingRef");
+        Assert.assertTrue(allBookingRefs.contains(bookingRef),
+                "Booking " + bookingRef + " not found in My Bookings");
+
+
+        // View booking details
+        APIResponse bookingDetail = apiRequest.get(
+                "https://api.eventhub.rahulshettyacademy.com/api/bookings/" + bookingId,
+                RequestOptions.create()
+                        .setHeader("Authorization", "Bearer " + token));
+
+        System.out.println("Status: " + bookingDetail.status());
+        System.out.println(bookingDetail.text());
+        Assert.assertTrue(bookingDetail.ok(), "Get booking detail failed: " + bookingDetail.text());
+
+        String detail = bookingDetail.text();
+        Assert.assertEquals(JsonPath.read(detail, "$.data.bookingRef"), bookingRef, "Wrong bookingRef");
+        Assert.assertEquals(JsonPath.read(detail, "$.data.customerName"), customerName, "Wrong customerName");
+        Assert.assertEquals(JsonPath.read(detail, "$.data.customerEmail"), customerEmail, "Wrong customerEmail");
+        Assert.assertEquals(JsonPath.read(detail, "$.data.customerPhone"), customerPhone, "Wrong customerPhone");
+        Assert.assertEquals((int) JsonPath.read(detail, "$.data.quantity"), quantity, "Wrong quantity");
+        Assert.assertEquals((int) JsonPath.read(detail, "$.data.eventId"), eventId, "Wrong eventId");
+
+        //delete booking
+
+
+
+        APIResponse deleteBooking=  apiRequest.delete("https://api.eventhub.rahulshettyacademy.com/api/bookings/"
+                +bookingId,RequestOptions.create().setHeader("Authorization",
+                "Bearer " + token));
+        Assert.assertTrue(deleteBooking.ok(),"Booking cancelled");
+
+        //Verify after delete booking
+
+        APIResponse verifyBooking = apiRequest.get
+                ("https://api.eventhub.rahulshettyacademy.com/api/bookings",
+                        RequestOptions.create().setHeader("Authorization"
+                                        , "Bearer " + token));
+        Assert.assertTrue(verifyBooking.ok(),"Verify booking API successful");
+
+        List<String> refAfterDelete=JsonPath.read(verifyBooking.text(),"$.data[*].bookingRef");
+        Assert.assertFalse(refAfterDelete.contains(bookingRef),
+                "Your deleted booking is not display in the list.");
+        System.out.println("Deleted booking is not belong to the list anymore");
+
+
     }
+
+
+
+
+
+
 }

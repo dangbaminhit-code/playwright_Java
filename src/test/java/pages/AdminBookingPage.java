@@ -45,8 +45,18 @@ public class AdminBookingPage {
                 new Locator.GetByRoleOptions().setName("View")).click();
         assertThat(page.getByRole(AriaRole.HEADING,
                 new Page.GetByRoleOptions().setName(Bookingref))).isVisible();
-
-
+        closeBookingDetails();
+    }
+    public void closeBookingDetails(){
+        Locator modal = page.locator("div.fixed.inset-0.z-50");
+        Locator closeBtn = modal.getByRole(AriaRole.BUTTON,
+                new Locator.GetByRoleOptions().setName("Close")).first();
+        if (closeBtn.isVisible()) {
+            closeBtn.click();
+        } else {
+            page.keyboard().press("Escape");
+        }
+        assertThat(modal).isHidden();
     }
     public int adminDeleteBooking(String Bookingref){
         Locator targetBooking = adminFindBookingCard(Bookingref);

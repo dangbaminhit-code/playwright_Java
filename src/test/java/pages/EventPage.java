@@ -33,9 +33,9 @@ public class EventPage {
 
     public Locator waitEvent() {
         Locator eventCards = page.getByTestId("event-card");
-        eventCards.first().waitFor();          // chờ event đầu tiên hiện ra
+        eventCards.first().waitFor();          // wait for first event
         int soEvent = eventCards.count();
-        System.out.println("Số event trên trang: " + soEvent);
+        System.out.println("number of events in page: " + soEvent);
         return eventCards;
     }
 
@@ -49,8 +49,8 @@ public class EventPage {
     public int getSeatsCount(String titleCard) {
         Locator targetCard = findEventCard(titleCard);
         String seatCard = targetCard.getByText("seats").innerText();
-        int seatsBefore = Integer.parseInt(seatCard.replaceAll("\\D+", "")); // lấy số: 500
-        System.out.println("Số chỗ trước khi book: " + seatsBefore);
+        int seatsBefore = Integer.parseInt(seatCard.replaceAll("\\D+", "")); // get number: 500
+        System.out.println("Seat before booked: " + seatsBefore);
         return seatsBefore;
     }
 
@@ -64,11 +64,11 @@ public class EventPage {
         goTo();
         Locator targetCardAfter = findEventCard(titleCard);
         assertThat(targetCardAfter).isVisible();
-        int expectedSeats = seatsBefore - 1;   // đã book 1 vé
-// hasText tự chờ cho đến khi trang tải xong dữ liệu mới
+        int expectedSeats = seatsBefore - 1;   // book 1
+
         assertThat(targetCardAfter.getByText("seats")).hasText(expectedSeats + " seats available");
 
-        System.out.println("Số chỗ sau khi book: " + targetCardAfter.getByText("seats").innerText());
+        System.out.println("Seat after booked: " + targetCardAfter.getByText("seats").innerText());
     }
 
     public EventPage searchByKeyword(String keyword) {
@@ -102,34 +102,34 @@ public class EventPage {
     }
 
     public void verifyAllResultsContain(String text) {
-        assertThat(eventCards.first()).isVisible(); // đảm bảo có ít nhất 1 kết quả
-        System.out.println("Số kết quả: " + eventCards.count());
+        assertThat(eventCards.first()).isVisible(); // make sure at least 1 result
+        System.out.println("Result is: " + eventCards.count());
     }
 
     public void verifyAllResultsCategory(String category) {
         verifyAllResultsContain(category);
-        System.out.println("Số kết quả: " + eventCards.count());
+        System.out.println("Result is: " + eventCards.count());
     }
 
     public void verifyNoResults() {
         assertThat(eventCards).hasCount(0);
-        // Nếu app có hiện thông báo "No events found" thì verify thêm:
+
         assertThat(page.getByText("No events found")).isVisible();
-        System.out.println("Số kết quả: " + eventCards.count());
+        System.out.println("Result is: " + eventCards.count());
     }
 
     public void verifyAllResultsCity(String city) {
         verifyAllResultsContain(city);
-        System.out.println("Số kết quả: " + eventCards.count());
+        System.out.println("Result is: " + eventCards.count());
     }
 
     public void verifyAllResultsKeyword(String keyword) {
         verifyAllResultsContain(keyword);
-        System.out.println("Số kết quả: " + eventCards.count());
+        System.out.println("Result is: " + eventCards.count());
     }
 
     /**
-     * Mọi card hiển thị đều chứa text. Cho phép 0 kết quả
+     * allow 0 result
      */
     public void verifyResultsMatchOrEmpty(String text) {
         Locator emptyMessage = page.getByText("No events found");
@@ -138,14 +138,14 @@ public class EventPage {
 
         int count = eventCards.count();
         if (count == 0) {
-            System.out.println("lọc theo \"" + text + "\" => 0 event");
+            System.out.println("Filter by \"" + text + "\" => 0 event");
         } else {
-            System.out.println("lọc theo \"" + text + "\" => " + count + " event");
+            System.out.println("Filter by\"" + text + "\" => " + count + " event");
         }
     }
     public void verifyResultsRestored(int expectedCount) {
-        assertThat(eventCards).hasCount(expectedCount);   // tự chờ đến khi đủ số card
-        System.out.println("Sau khi clear search => " + eventCards.count() + " event");
+        assertThat(eventCards).hasCount(expectedCount);
+        System.out.println("After clear search => " + eventCards.count() + " event");
     }
 }
 

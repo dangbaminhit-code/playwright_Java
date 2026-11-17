@@ -24,6 +24,7 @@ public class BookingApiTest extends apiTestBase {
     }
 
     /** Creates a booking and returns its response body. */
+    @Test
     private String createBooking() {
         APIResponse response = bookingApi.createBooking(bookingData());
         Assert.assertTrue(response.ok(), "Create booking failed: " + response.text());

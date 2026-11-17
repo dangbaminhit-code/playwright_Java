@@ -66,8 +66,8 @@ public class myBookings
                 Locator.FilterOptions().setHasText(Bookingref));
         assertThat(deletedBooking).hasCount(0);
         assertThat(bookingCard).hasCount(countBefore-1);
-        System.out.println("Đã huỷ booking " + Bookingref
-                + ". Còn lại: " + bookingCard.count() + " booking");
+        System.out.println("Cancelled booking " + Bookingref
+                + ". Remain: " + bookingCard.count() + " booking");
         }
     public void clearAllBookings(){
         waitBookings();
@@ -79,7 +79,7 @@ public class myBookings
     }
     public void verifyAfterClearAllBookings(){
         assertThat(bookingCard).hasCount(0);
-        System.out.println("Đã xoá hết booking. Còn lại: " + bookingCard.count());
+        System.out.println("Deleted all booking. Remain: " + bookingCard.count());
     }
     }
 

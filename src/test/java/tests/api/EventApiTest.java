@@ -23,10 +23,42 @@ public class EventApiTest extends apiTestBase {
         return event;
     }
 
-    private int createEventAndGetId() {
+    public int createEventAndGetId() {
         APIResponse response = eventAPI.createEvent(sampleEvent());
         Assert.assertTrue(response.ok(), "Create event failed: " + response.text());
         return JsonPath.read(response.text(), "$.data.id");
+    }
+
+    @Test
+    public void createEventReturnsCorrectData() {
+        Map<String, Object> event = sampleEvent();
+        APIResponse response = eventAPI.createEvent(event);
+        Assert.assertTrue(response.ok(),
+                "Create event failed: " + response.status() + " " + response.text());
+
+        String body = response.text();
+        Object idValue = JsonPath.read(body, "$.data.id");
+        Assert.assertNotNull(idValue, "Response has no event id: " + body);
+        int eventId = ((Number) idValue).intValue();
+        try {
+            Assert.assertEquals(JsonPath.read(body, "$.data.title"), event.get("title"));
+            Assert.assertEquals(JsonPath.read(body, "$.data.description"), event.get("description"));
+            Assert.assertEquals(JsonPath.read(body, "$.data.category"), event.get("category"));
+            Assert.assertEquals(JsonPath.read(body, "$.data.venue"), event.get("venue"));
+            Assert.assertEquals(JsonPath.read(body, "$.data.city"), event.get("city"));
+
+            // API may return price/totalSeats as numbers while we send strings -> compare as numbers
+            Assert.assertEquals(toDouble(JsonPath.read(body, "$.data.price")),
+                    toDouble(event.get("price")));
+            Assert.assertEquals(toDouble(JsonPath.read(body, "$.data.totalSeats")),
+                    toDouble(event.get("totalSeats")));
+        } finally {
+            eventAPI.deleteEvent(eventId); // clean up test data
+        }
+    }
+
+    private double toDouble(Object value) {
+        return Double.parseDouble(String.valueOf(value));
     }
 
     @Test

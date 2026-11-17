@@ -26,6 +26,12 @@ public class LoginPage {
         DashboardPage dashboardPage = new DashboardPage(page);
         return dashboardPage;
 }
-
+    public LoginPage logOut(){
+        page.getByRole(AriaRole.BUTTON,
+                new Page.GetByRoleOptions().setName("Logout")).click();
+        assertThat(page.getByRole(AriaRole.BUTTON,new
+                Page.GetByRoleOptions().setName("Sign In"))).isVisible();
+        return this;
+    }
 
 }
