@@ -16,4 +16,9 @@ public class loginLogOutTest extends testBase
         loginPage.logintoPage();   // each test gets a new page, so log in first
         loginPage.logOut();
     }
+    @Test(description = "test login fail")
+    public void loginFail(){
+        LoginPage loginPage = new LoginPage(page,baseUrl);
+        loginPage.validateLoginFailed();
+    }
 }

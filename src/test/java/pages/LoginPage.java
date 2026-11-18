@@ -33,5 +33,12 @@ public class LoginPage {
                 Page.GetByRoleOptions().setName("Sign In"))).isVisible();
         return this;
     }
+    public void validateLoginFailed(){
+        page.navigate(baseUrl);
+        page.getByLabel(email_lable).fill("dangbaminh@gmail.com");
+        page.getByLabel(password_lable).fill("123456789@xX");
+        page.getByRole(AriaRole.BUTTON,new Page.GetByRoleOptions().setName("Sign In")).click();
+        assertThat(page.getByText("Invalid email or password")).isVisible();
+    }
 
 }

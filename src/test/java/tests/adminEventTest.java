@@ -1,13 +1,29 @@
 package tests;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.AdminEventPage;
 import pages.DashboardPage;
 import pages.LoginPage;
 
 public class adminEventTest extends testBase{
-    @Test(description = "Test create event")
-    public void createEvent(){
+
+    @DataProvider(name="dataEvent")
+    public Object[][] dataEvent(){
+        return new Object[][]{
+                {"POM","hello new POM","Sports","Delhi","SG","2026-12-18T03:51",
+                "55","50"},
+                {"POM1","hello new POM1","Conference","Mumbai","SG","2026-12-18T03:51",
+                        "60","50"},
+                {"POM2","hello new POM2","Concert","Pune","SG","2026-12-18T03:51",
+                        "600","50"}
+        };
+    }
+
+    @Test(dataProvider = "dataEvent", description = "Test create event")
+    public void createEvent(String title, String description, String category,
+                            String city, String venue, String dateTime,
+                            String price, String totalSeats){
         LoginPage loginPage = new LoginPage(page,baseUrl);
         loginPage.logintoPage();
         //DashboardPage dashboardPage = new DashboardPage(page);
@@ -15,9 +31,8 @@ public class adminEventTest extends testBase{
         dashboardPage.waiteventLoad();
         AdminEventPage adminEventPage= new AdminEventPage(page);
         adminEventPage.goToAdminEventPage();
-        adminEventPage.createEvent("POM","hello Minh","Sports"
-                ,"HCM","SG","2026-11-18T03:51",
-                "50","500");
+        adminEventPage.createEvent(title,description,category,city,venue,dateTime
+        ,price,totalSeats);
     }
     @Test(description = "go to my admin event and delete event")
     public void deleteEvent(String titleCard){

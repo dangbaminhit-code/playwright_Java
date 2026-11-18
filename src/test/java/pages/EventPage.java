@@ -41,8 +41,11 @@ public class EventPage {
 
     public Locator findEventCard(String titleCard) {
         Locator eventCards = waitEvent();
-        Locator targetCard = eventCards.filter(new Locator.FilterOptions().setHasText(titleCard));
-        assertThat(targetCard).isVisible();
+        // Match the card title exactly: setHasText("POM") would also match "POM1", "POM2"...
+        Locator targetCard = eventCards.filter(new Locator.FilterOptions().setHas(
+                page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName(titleCard).setExact(true))));
+        assertThat(targetCard.first()).isVisible();
+        targetCard = targetCard.first();
         return targetCard;
     }
 
