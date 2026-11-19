@@ -4,8 +4,10 @@
         <classes>
             <class name="tests.frameworkBuildDataDriventest"/>
             <class name="tests.APITesting"/>
+            <class name="tests.api.AuthApiTest"/>
             <class name="tests.api.EventApiTest"/>
             <class name="tests.api.BookingApiTest"/>
+            <class name="tests.api.CrossUserAccessTest"/>
 
 
 
