@@ -24,4 +24,24 @@ public class adminBookingTest extends testBase{
         admin.verifyFilterByStatus(status);
 
     }
+    @Test(description = "view booking details")
+    public void viewBookingDetails(){
+        new LoginPage(page,baseUrl).logintoPage().waiteventLoad();
+        AdminBookingPage admin = new AdminBookingPage(page);
+        admin.goToAdminBookings();
+        admin.adminWaitBookings();
+        admin.adminFindBookingCard("P-1D20GG");
+        admin.adminViewBookingDetails("P-1D20GG");
+        admin.closeBookingDetails();
+    }
+    @Test(description = "delete booking")
+    public void deleteBooking(){
+        new LoginPage(page,baseUrl).logintoPage().waiteventLoad();
+        AdminBookingPage admin = new AdminBookingPage(page);
+        admin.goToAdminBookings();
+        admin.goToAdminBookings();
+        admin.adminFindBookingCard("P-1D20GG");
+       int countBefore= admin.adminDeleteBooking("P-1D20GG");
+        admin.adminVerifyAfterDeleteBooking("P-1D20GG",countBefore);
+    }
 }
